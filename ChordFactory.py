@@ -7,12 +7,11 @@ from NoteRepo import NoteRepo
 
 class ChordFactory:
     def __init__(self, note_repo: NoteRepo):
-        interval_list = [0, 2, 4, 5, 7, 9, 11, 12]
-        perfect_interval = [x if i not in {1,2,5,6} else -1 for i,x in enumerate(interval_list) ]
-        major_interval = [x if i not in {0, 3, 4, 7} else -1 for i,x in enumerate(interval_list) ]
-        minor_interval = [x-1 for x in major_interval]
-        diminished_interval = [x-1 for x in perfect_interval]
-        augmented_interval = [x+1 for x in perfect_interval]
+        perfect_interval = [0, 2, 4, 5, 7, 9, 11, 12]
+        major_interval = perfect_interval
+        minor_interval = [x-1 if i in {1,2,5,6} else x for i,x in enumerate(major_interval) ]
+        diminished_interval = [x-1 for x in minor_interval]
+        augmented_interval = [x+1 for x in major_interval]
 
         self.perfect_interval = Interval(perfect_interval, note_repo)
         self.major_interval = Interval(major_interval, note_repo)
@@ -43,4 +42,54 @@ class ChordFactory:
             third = self.minor_interval.get_III(root)
             fifth = self.diminished_interval.get_V(root)
             return Chord(self.get_chord_name(root, chord_type), root, third, fifth)
+        
+        elif chord_type == ChordType.DOMINANT_SEVENTH:
+            third = self.major_interval.get_III(root)
+            fifth = self.perfect_interval.get_V(root)
+            seventh = self.minor_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.MAJOR_SEVENTH:
+            third = self.major_interval.get_III(root)
+            fifth = self.perfect_interval.get_V(root)
+            seventh = self.major_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.MINOR_SEVENTH:
+            third = self.minor_interval.get_III(root)
+            fifth = self.perfect_interval.get_V(root)
+            seventh = self.minor_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.HALF_DIMINISHED_SEVENTH:
+            third = self.minor_interval.get_III(root)
+            fifth = self.diminished_interval.get_V(root)
+            seventh = self.minor_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.DIMINISHED_SEVENTH:
+            third = self.minor_interval.get_III(root)
+            fifth = self.diminished_interval.get_V(root)
+            seventh = self.diminished_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.MINOR_MAJOR_SEVENTH:
+            third = self.minor_interval.get_III(root)
+            fifth = self.perfect_interval.get_V(root)
+            seventh = self.major_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.AUGMENTED_MAJOR_SEVENTH:
+            third = self.major_interval.get_III(root)
+            fifth = self.augmented_interval.get_V(root)
+            seventh = self.major_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+        elif chord_type == ChordType.AUGMENTED_SEVENTH:
+            third = self.major_interval.get_III(root)
+            fifth = self.augmented_interval.get_V(root)
+            seventh = self.minor_interval.get_VII(root)
+            return Chord(self.get_chord_name(root, chord_type), root, third, fifth, seventh)
+
+            
 
